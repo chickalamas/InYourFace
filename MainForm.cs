@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace InYourFace
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public bool IsGoingUp { get; set; }
         public int InternalCounter { get; set; }
         public int InternalInterval { get; set; }
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             this.IsGoingUp = true;
