@@ -42,7 +42,7 @@
             // 
             this.labelChosenNumber.AutoSize = true;
             this.labelChosenNumber.BackColor = System.Drawing.Color.LimeGreen;
-            this.labelChosenNumber.Font = new System.Drawing.Font("David", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.labelChosenNumber.Font = new System.Drawing.Font("David", 90F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.labelChosenNumber.Location = new System.Drawing.Point(12, 21);
             this.labelChosenNumber.MaximumSize = new System.Drawing.Size(1000, 200);
             this.labelChosenNumber.MinimumSize = new System.Drawing.Size(1300, 200);
@@ -56,7 +56,7 @@
             // 
             this.labelCurrentNumber.AutoSize = true;
             this.labelCurrentNumber.BackColor = System.Drawing.Color.Aquamarine;
-            this.labelCurrentNumber.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.labelCurrentNumber.Font = new System.Drawing.Font("David", 90F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.labelCurrentNumber.Location = new System.Drawing.Point(12, 231);
             this.labelCurrentNumber.MaximumSize = new System.Drawing.Size(200, 200);
             this.labelCurrentNumber.MinimumSize = new System.Drawing.Size(1300, 200);

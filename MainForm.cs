@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO.Ports;
 
 namespace InYourFace
 {
@@ -16,6 +18,8 @@ namespace InYourFace
         public bool IsGoingUp { get; set; }
         public int InternalCounter { get; set; }
         public int InternalInterval { get; set; }
+        List<Player> Players { get; set; }
+        ArduinoListener Arduino { get; set; }
         public MainForm()
         {
             InitializeComponent();
@@ -25,6 +29,14 @@ namespace InYourFace
             int chosenNumber = new Random().Next() % 1000;
             this.labelChosenNumber.Text = chosenNumber.ToString();
             this.labelCurrentNumber.Text = (chosenNumber - new Random().NextDouble() % 200 + new Random().NextDouble() % 200).ToString();
+            this.Players = new List<Player>() 
+            {
+                new Player(0, this.labelPlayer1),
+                new Player(1, this.labelPlayer2),
+                new Player(2, this.labelPlayer3),
+                new Player(3, this.labelPlayer4)
+            };
+            this.Arduino = new ArduinoListener("COM3", this.Players);
 
             this.timer.Start();
         }
@@ -32,14 +44,23 @@ namespace InYourFace
         private void timer_Tick(object sender, EventArgs e)
         {
             this.InternalCounter++;
+            uint currentNumber = uint.Parse(this.labelCurrentNumber.Text);
+            uint chosenNumber = uint.Parse(this.labelChosenNumber.Text);
+
+            updatePlayer((int)currentNumber);
+            if (true == isGameFinished())
+            {
+                Player loser = getLoser((int)chosenNumber);
+                Debug.Print("Loser Is {0} --- shooooooot!!", loser.Id);
+            }
+
+
             bool shouldDoSomething = this.InternalCounter % this.InternalInterval == 0;
             if (false == shouldDoSomething)
             {
                 return;
             }
-            
-            uint currentNumber = uint.Parse(this.labelCurrentNumber.Text);
-            uint chosenNumber = uint.Parse(this.labelChosenNumber.Text);
+
             int distance = Math.Abs((int)currentNumber - (int)chosenNumber);
             this.InternalInterval = GetNewInterval(distance);
 
@@ -85,7 +106,7 @@ namespace InYourFace
         {
             int distanec = Math.Abs((int)currentNumber - (int)chosenNumber);
             bool isChosenBiggerThanCurrent = chosenNumber > currentNumber;
-            
+
             //we are on the buttom!
             if (0 == currentNumber && (false == isGoingUp))
             {
@@ -108,12 +129,12 @@ namespace InYourFace
                 else
                 {
                     return !isGoingUp;
-                }   
+                }
             }
 
             double maxDistance = 100;
             double chanceToChange = (double)Math.Abs((int)(currentNumber) - (int)(chosenNumber)) / maxDistance;
-            
+
             //increase the chanses to get closer..
             if (isChosenBiggerThanCurrent && (false == isGoingUp))
             {
@@ -127,5 +148,28 @@ namespace InYourFace
 
             return new Random().NextDouble() < chanceToChange;
         }
+
+        private void updatePlayer(int currentNumber)
+        {
+            foreach (Player player in this.Players)
+            {
+                if (true == player.IsPressed && player.SelectedNumber == -1)
+                {
+                    player.SelectedNumber = currentNumber;
+                    player.Label.Text = currentNumber.ToString();
+                }
+            }
+        }
+
+        private bool isGameFinished()
+        {
+            return this.Players.Count(player => player.SelectedNumber == -1) == 0;
+        }
+
+        private Player getLoser(int chosenNumber)
+        {
+            return this.Players.First();//this.Players.Min(player => Math.Abs(player.SelectedNumber - chosenNumber));
+        }
     }
+
 }
